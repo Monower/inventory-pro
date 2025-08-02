@@ -56,7 +56,25 @@ class User extends Authenticatable
 
     public function hasRole($roleName)
     {
+        // If roles are already loaded, check collection instead of DB query
+        if ($this->relationLoaded('roles')) {
+            return $this->roles->contains('name', $roleName);
+        }
+
+        // Otherwise, fallback to DB query
         return $this->roles()->where('name', $roleName)->exists();
     }
+
+    public function hasPermission($permissionName)
+    {
+        return $this->roles()->whereHas('permissions', function ($query) use ($permissionName) {
+            $query->where('name', $permissionName);
+        })->exists();
+    }
+
+
+
+
+
 
 }

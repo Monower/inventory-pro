@@ -1,4 +1,23 @@
+import { useState } from "react";
+import { login } from "../../api/auth";
+import { getCurrentUser } from "../../api/auth";
+
 const Login = () => {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        try {
+             const result = await login(email, password);
+             console.log('user login result: ',result);
+            const user = await getCurrentUser();
+            console.log("Logged in as:", user);
+        } catch (err) {
+            console.error("Login failed:", err.message);
+        }
+    };
+
     return (
         <div
             id="login-screen"
@@ -17,7 +36,7 @@ const Login = () => {
                     Sign in to your account
                 </p>
 
-                <form id="login-form">
+                <form id="login-form" onSubmit={handleLogin}>
                     <div className="mb-4">
                         <label
                             for="login-email"
@@ -31,6 +50,8 @@ const Login = () => {
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
                             placeholder="your@email.com"
                             required
+                            value={email} 
+                            onChange={e => setEmail(e.target.value)}
                         />
                     </div>
                     <div className="mb-6">
@@ -46,6 +67,8 @@ const Login = () => {
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
                             placeholder="••••••••"
                             required
+                            value={password} 
+                            onChange={e => setPassword(e.target.value)}
                         />
                     </div>
                     <button

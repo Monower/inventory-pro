@@ -10,9 +10,11 @@ export const getCsrfToken = async () => {
 
 
 export const login = async (email, password) => {
-  await getCsrfToken();
+  const result = await getCsrfToken();
 
-  return apiFetch('/api/login', {
+  console.log('csrf result: ',result);
+
+  return apiFetch('/login', {
     method: 'POST',
     body: JSON.stringify({ email, password }),
   });
